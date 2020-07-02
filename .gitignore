@@ -1,0 +1,10 @@
+# Ignore pycharm cache files
+__pycache__
+analytics_module/__pycache__
+common_files/__pycache__
+consolidation_module/__pycache__
+data_cleaning/__pycache__
+data_extraction/__pycache__
+db_viz/__pycache__
+db_module/__pycache__
+eda/__pycache__
