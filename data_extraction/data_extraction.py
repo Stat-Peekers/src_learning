@@ -59,6 +59,15 @@ class DataExtraction:
         self.match_jsons = [json.load(open(self.match_data_dir + c_folder + "/" + m_filename, encoding="utf-8"))
                             for c_folder in comp_folder_list for m_filename in os.listdir(self.match_data_dir + c_folder)]
 
+    # ********************** Get Event Data ********************** #
+    def _get_event_json(self):
+        event_json_list = [folder_name for folder_name in os.listdir(self.event_data_dir)]
+        self.event_json = [json.load(open(self.event_data_dir + "/" + m_filename, encoding="utf-8"))
+                           for m_filename in event_json_list]
+
+    def _get_event_data_df(self):
+        event_json_list = [folder_name for folder_name in os.listdir(self.event_data_dir)]
+
     def _get_match_df(self):
         for tour_index in range(len(self.match_jsons)):
             self.match_df = self.match_df.append(self.match_jsons[tour_index])
@@ -96,6 +105,10 @@ class DataExtraction:
         self.match_df = pd.concat([self.match_df, away_team_df], axis=1)
         del away_team_df
 
+    def _get_event_final_call(self):
+        # self._get_event_json()
+        self._get_event_data_df()
+
     def _get_match_final_call(self):
         self._get_match_json()
         self._get_match_df()
@@ -109,12 +122,18 @@ class DataExtraction:
     def _get_match_info(self):
         self._get_match_final_call()
 
+    def _get_event_data(self):
+        self._get_event_final_call()
+
     def final_data_extraction_call(self):
         # Extract competition info and arrange it for a DB table:
         self._get_comp_info()
 
-        # Extract match info and arrange it for a DB table:
+        # Extract match data and arrange it for a DB table:
         self._get_match_info()
+
+        # Extract event data and arrange it for a DB table:
+        self._get_event_data()
 
     def upload_data_to_db(self):
         pass
@@ -127,3 +146,4 @@ if __name__ == "__main__":
     ext_obj.final_data_extraction_call()
     ext_obj.comp_df.to_csv("data/input/comp_info.csv", index=False)
     ext_obj.match_df.to_csv("data/input/match_info.csv", index=False)
+    ext_obj.event_df.to_csv("data/input/match_info.csv", index=False)
